@@ -3,6 +3,14 @@ import { withAccessToken } from "@raycast/utils";
 import { useBeeperDesktop, createBeeperOAuth, focusApp } from "./api";
 import { t } from "./locales";
 
+/**
+ * Selects an icon representing a messaging network.
+ *
+ * The provided network name is normalized by lowercasing and removing spaces, slashes, and dashes before lookup.
+ *
+ * @param network - Network name (e.g., "Slack", "facebook-messenger", "Google Messages")
+ * @returns The SVG filename for a known network (e.g., `"slack.svg"`, `"messenger.svg"`) or `Icon.Message` when no match exists
+ */
 function getNetworkIcon(network: string): Image.ImageLike {
   const networkLower = network.toLowerCase().replace(/[/\s-]/g, "");
 
@@ -25,6 +33,15 @@ function getNetworkIcon(network: string): Image.ImageLike {
   return iconMap[networkLower] || Icon.Message;
 }
 
+/**
+ * Render a Raycast list of Beeper chats that currently have unread messages.
+ *
+ * Displays unread chats sorted by unread count (highest first). Each list item shows the chat icon, title,
+ * network, unread count, pin/mute indicators, and last activity date when available. Actions are provided to
+ * open the chat in Beeper and to copy the chat ID. An empty view is shown when there are no unread chats.
+ *
+ * @returns A Raycast `List` element containing unread chat items with accessories and actions
+ */
 function UnreadChatsCommand() {
   const translations = t();
   const { data: chats = [], isLoading } = useBeeperDesktop(async (client) => {

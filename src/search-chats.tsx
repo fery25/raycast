@@ -4,6 +4,12 @@ import { useState } from "react";
 import { useBeeperDesktop, createBeeperOAuth, focusApp } from "./api";
 import { t } from "./locales";
 
+/**
+ * Selects an icon representing the given chat/network name.
+ *
+ * @param network - Network name or identifier (case-insensitive; may include spaces, slashes, or hyphens)
+ * @returns The matching local SVG asset for the network, or `Icon.Message` when no specific icon is available
+ */
 function getNetworkIcon(network: string): Image.ImageLike {
   const networkLower = network.toLowerCase().replace(/[/\s-]/g, "");
 
@@ -26,6 +32,15 @@ function getNetworkIcon(network: string): Image.ImageLike {
   return iconMap[networkLower] || Icon.Message;
 }
 
+/**
+ * Render a search interface that finds and displays Beeper chats matching the user's query.
+ *
+ * Shows an initial empty view when the search box is empty, performs a client-side search as the
+ * user types, and renders matching chats with network icons, unread/pinned/muted accessories, and
+ * actions to open the chat in Beeper or copy its ID.
+ *
+ * @returns The List JSX element presenting the search bar, results, and appropriate empty states.
+ */
 function SearchChatsCommand() {
   const translations = t();
   const [searchText, setSearchText] = useState("");

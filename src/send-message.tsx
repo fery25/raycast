@@ -9,6 +9,15 @@ interface SendMessageFormValues {
   message: string;
 }
 
+/**
+ * Renders a form to select a chat and send a message via the Beeper desktop client.
+ *
+ * The form displays a dropdown of chats (sorted by most recent activity) and a message textarea.
+ * On submit it validates inputs, sends the message with the Beeper desktop client, closes the main window on success,
+ * and shows success or failure feedback to the user.
+ *
+ * @returns The React element containing the send-message form.
+ */
 function SendMessageForm() {
   const translations = t();
   const [isLoading, setIsLoading] = useState(false);

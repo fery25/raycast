@@ -4,6 +4,12 @@ import { withAccessToken } from "@raycast/utils";
 import { useBeeperDesktop, createBeeperOAuth, focusApp } from "./api";
 import { t } from "./locales";
 
+/**
+ * Selects an icon image that represents a messaging network.
+ *
+ * @param network - The network name or identifier (case-insensitive; spaces, slashes, and dashes are ignored)
+ * @returns The corresponding network icon image, or a generic message icon if the network is not recognized
+ */
 function getNetworkIcon(network: string): Image.ImageLike {
   const networkLower = network.toLowerCase().replace(/[/\s-]/g, "");
 
@@ -26,6 +32,13 @@ function getNetworkIcon(network: string): Image.ImageLike {
   return iconMap[networkLower] || Icon.Message;
 }
 
+/**
+ * Render a searchable list of Beeper chats with actions to open the chat in Beeper, view details, and copy the chat ID.
+ *
+ * The list is populated from Beeper Desktop search results filtered by the search bar; each item shows network-specific icon, title (or a localized unnamed fallback), type, and last activity when available.
+ *
+ * @returns A Raycast List component populated with chat items and an empty state when no chats are found.
+ */
 function ListChatsCommand() {
   const translations = t();
   const [searchText, setSearchText] = useState("");

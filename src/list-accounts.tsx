@@ -4,6 +4,13 @@ import type { BeeperDesktop } from "@beeper/desktop-api";
 import { useBeeperDesktop, createBeeperOAuth, focusApp } from "./api";
 import { t } from "./locales";
 
+/**
+ * Render a searchable list of Beeper Desktop accounts with an optional inline detail pane.
+ *
+ * Displays accounts fetched from Beeper Desktop and provides actions to focus the app, toggle the inline details pane, open a legacy detail view, and refresh the list. When no accounts are available an appropriate empty view is shown.
+ *
+ * @returns A Raycast List component populated with account items and an empty-state view when no accounts exist
+ */
 function ListAccountsCommand() {
   const translations = t();
   const [isShowingDetail, setIsShowingDetail] = useCachedState<boolean>("list-accounts:isShowingDetail", false);
