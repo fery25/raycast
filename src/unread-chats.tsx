@@ -4,8 +4,8 @@ import { useBeeperDesktop, createBeeperOAuth, focusApp } from "./api";
 import { t } from "./locales";
 
 function getNetworkIcon(network: string): Image.ImageLike {
-  const networkLower = network.toLowerCase().replace(/[\/\s-]/g, "");
-  
+  const networkLower = network.toLowerCase().replace(/[/\s-]/g, "");
+
   const iconMap: Record<string, string> = {
     slack: "slack.svg",
     whatsapp: "whatsapp.svg",
@@ -27,26 +27,23 @@ function getNetworkIcon(network: string): Image.ImageLike {
 
 function UnreadChatsCommand() {
   const translations = t();
-  const { data: chats = [], isLoading } = useBeeperDesktop(
-    async (client) => {
-      const allChats = [];
-      for await (const chat of client.chats.search({})) {
-        // Filter only chats with unread messages
-        if (chat.unreadCount > 0) {
-          allChats.push(chat);
-        }
+  const { data: chats = [], isLoading } = useBeeperDesktop(async (client) => {
+    const allChats = [];
+    for await (const chat of client.chats.search({})) {
+      // Filter only chats with unread messages
+      if (chat.unreadCount > 0) {
+        allChats.push(chat);
       }
-      // Sort by unread count (highest first)
-      return allChats.sort((a, b) => b.unreadCount - a.unreadCount);
-    },
-    []
-  );
+    }
+    // Sort by unread count (highest first)
+    return allChats.sort((a, b) => b.unreadCount - a.unreadCount);
+  }, []);
 
   const totalUnread = chats.reduce((sum, chat) => sum + chat.unreadCount, 0);
 
   return (
-    <List 
-      isLoading={isLoading} 
+    <List
+      isLoading={isLoading}
       searchBarPlaceholder={translations.commands.unreadChats.searchPlaceholder}
       navigationTitle={`${translations.commands.unreadChats.navigationTitle}${totalUnread > 0 ? translations.commands.unreadChats.totalCount(totalUnread) : ""}`}
     >
@@ -57,9 +54,9 @@ function UnreadChatsCommand() {
           title={chat.title || translations.common.unnamedChat}
           subtitle={chat.network}
           accessories={[
-            { 
+            {
               text: translations.commands.unreadChats.unreadCount(chat.unreadCount),
-              icon: Icon.Bubble
+              icon: Icon.Bubble,
             },
             ...(chat.isPinned ? [{ icon: Icon.Pin }] : []),
             ...(chat.isMuted ? [{ icon: Icon.SpeakerOff }] : []),

@@ -12,21 +12,18 @@ interface SendMessageFormValues {
 function SendMessageForm() {
   const translations = t();
   const [isLoading, setIsLoading] = useState(false);
-  const { data: chats = [], isLoading: chatsLoading } = useBeeperDesktop(
-    async (client) => {
-      const allChats = [];
-      for await (const chat of client.chats.search({})) {
-        allChats.push(chat);
-      }
-      // Sort by last activity (most recent first)
-      return allChats.sort((a, b) => {
-        const aTime = a.lastActivity ? new Date(a.lastActivity).getTime() : 0;
-        const bTime = b.lastActivity ? new Date(b.lastActivity).getTime() : 0;
-        return bTime - aTime;
-      });
-    },
-    []
-  );
+  const { data: chats = [], isLoading: chatsLoading } = useBeeperDesktop(async (client) => {
+    const allChats = [];
+    for await (const chat of client.chats.search({})) {
+      allChats.push(chat);
+    }
+    // Sort by last activity (most recent first)
+    return allChats.sort((a, b) => {
+      const aTime = a.lastActivity ? new Date(a.lastActivity).getTime() : 0;
+      const bTime = b.lastActivity ? new Date(b.lastActivity).getTime() : 0;
+      return bTime - aTime;
+    });
+  }, []);
 
   async function handleSubmit(values: SendMessageFormValues) {
     if (!values.chatId || !values.message) {

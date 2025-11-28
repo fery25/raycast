@@ -54,7 +54,7 @@ export const en = {
       errorMessage: "Failed to focus Beeper Desktop",
     },
   },
-  
+
   // Common
   common: {
     unnamedChat: "Unnamed Chat",

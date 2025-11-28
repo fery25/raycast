@@ -56,7 +56,7 @@ export const cs: Translations = {
       errorMessage: "Nepodařilo se zaměřit Beeper Desktop",
     },
   },
-  
+
   // Common
   common: {
     unnamedChat: "Nepojmenovaný chat",

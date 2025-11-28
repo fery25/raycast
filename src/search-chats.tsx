@@ -1,12 +1,12 @@
-import { ActionPanel, Action, List, Icon, Image, Color } from "@raycast/api";
+import { ActionPanel, Action, List, Icon, Image } from "@raycast/api";
 import { withAccessToken } from "@raycast/utils";
 import { useState } from "react";
 import { useBeeperDesktop, createBeeperOAuth, focusApp } from "./api";
 import { t } from "./locales";
 
 function getNetworkIcon(network: string): Image.ImageLike {
-  const networkLower = network.toLowerCase().replace(/[\/\s-]/g, "");
-  
+  const networkLower = network.toLowerCase().replace(/[/\s-]/g, "");
+
   const iconMap: Record<string, string> = {
     slack: "slack.svg",
     whatsapp: "whatsapp.svg",
@@ -40,11 +40,16 @@ function SearchChatsCommand() {
       }
       return allChats;
     },
-    [searchText]
+    [searchText],
   );
 
   return (
-    <List isLoading={isLoading} searchBarPlaceholder={translations.commands.searchChats.searchPlaceholder} onSearchTextChange={setSearchText} throttle>
+    <List
+      isLoading={isLoading}
+      searchBarPlaceholder={translations.commands.searchChats.searchPlaceholder}
+      onSearchTextChange={setSearchText}
+      throttle
+    >
       {searchText === "" ? (
         <List.EmptyView
           icon={Icon.MagnifyingGlass}
@@ -59,7 +64,9 @@ function SearchChatsCommand() {
             title={chat.title || translations.common.unnamedChat}
             subtitle={chat.network}
             accessories={[
-              ...(chat.unreadCount > 0 ? [{ text: translations.commands.unreadChats.unreadCount(chat.unreadCount) }] : []),
+              ...(chat.unreadCount > 0
+                ? [{ text: translations.commands.unreadChats.unreadCount(chat.unreadCount) }]
+                : []),
               ...(chat.isPinned ? [{ icon: Icon.Pin }] : []),
               ...(chat.isMuted ? [{ icon: Icon.SpeakerOff }] : []),
             ]}

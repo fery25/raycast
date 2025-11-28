@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { ActionPanel, Detail, List, Action, Icon, Image, Color } from "@raycast/api";
+import { ActionPanel, Detail, List, Action, Icon, Image } from "@raycast/api";
 import { withAccessToken } from "@raycast/utils";
 import { useBeeperDesktop, createBeeperOAuth, focusApp } from "./api";
 import { t } from "./locales";
 
 function getNetworkIcon(network: string): Image.ImageLike {
-  const networkLower = network.toLowerCase().replace(/[\/\s-]/g, "");
-  
+  const networkLower = network.toLowerCase().replace(/[/\s-]/g, "");
+
   const iconMap: Record<string, string> = {
     slack: "slack.svg",
     whatsapp: "whatsapp.svg",
@@ -38,11 +38,16 @@ function ListChatsCommand() {
       }
       return allChats;
     },
-    [searchText]
+    [searchText],
   );
 
   return (
-    <List isLoading={isLoading} searchBarPlaceholder={translations.commands.listChats.searchPlaceholder} onSearchTextChange={setSearchText} throttle>
+    <List
+      isLoading={isLoading}
+      searchBarPlaceholder={translations.commands.listChats.searchPlaceholder}
+      onSearchTextChange={setSearchText}
+      throttle
+    >
       {chats.map((chat) => (
         <List.Item
           key={chat.id}

@@ -1,4 +1,4 @@
-import { environment } from "@raycast/api";
+import { environment, getPreferenceValues } from "@raycast/api";
 import { en, Translations } from "./en";
 import { cs } from "./cs";
 
@@ -8,19 +8,19 @@ const translations: Record<string, Translations> = {
 };
 
 function getLocale(): string {
-  // Try to get locale from Raycast environment
-  // Note: environment.locale may not be available in all Raycast versions
+  // Try to get language from Raycast preferences first
+  const prefs = getPreferenceValues();
+  if (typeof prefs.language === "string" && translations[prefs.language]) {
+    return prefs.language;
+  }
+
+  // Fallback to Raycast environment locale
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const raycastLocale = (environment as any).locale as string | undefined;
-  
-  // If locale is not available, default to English
   if (!raycastLocale) {
     return "en";
   }
-  
-  // Extract language code (e.g., "cs-CZ" -> "cs", "en_US" -> "en")
   const languageCode = raycastLocale.split(/[-_]/)[0].toLowerCase();
-  
-  // Return language code if we have translations for it, otherwise default to English
   return translations[languageCode] ? languageCode : "en";
 }
 

@@ -52,6 +52,18 @@
       "type": "textfield",
       "required": false,
       "default": "http://localhost:23373"
+    },
+    {
+      "name": "language",
+      "title": "Language",
+      "description": "Select the extension language",
+      "type": "dropdown",
+      "required": false,
+      "default": "en",
+      "data": [
+        { "title": "English", "value": "en" },
+        { "title": "Čeština", "value": "cs" }
+      ]
     }
   ],
   "dependencies": {
