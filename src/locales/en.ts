@@ -1,0 +1,84 @@
+export const en = {
+  // Commands
+  commands: {
+    listAccounts: {
+      title: "List Accounts",
+      description: "List all connected Beeper accounts",
+      navigationTitle: "Beeper Accounts",
+      emptyTitle: "No Accounts Found",
+      emptyDescription: "No Beeper accounts are connected",
+    },
+    listChats: {
+      title: "List Chats",
+      description: "List all your Beeper chats",
+      searchPlaceholder: "Filter chats...",
+      emptyTitle: "No chats found",
+      emptyDescription: "Try adjusting your search or make sure Beeper Desktop is running",
+    },
+    searchChats: {
+      title: "Search Chats",
+      description: "Search through your Beeper chats",
+      searchPlaceholder: "Search chats...",
+      emptyTitle: "Search for chats",
+      emptyDescription: "Start typing to search through your Beeper chats",
+      noResultsTitle: "No chats found",
+      noResultsDescription: "Try changing your search or ensure Beeper Desktop is running",
+    },
+    unreadChats: {
+      title: "Unread Chats",
+      description: "View all chats with unread messages",
+      navigationTitle: "Unread Chats",
+      searchPlaceholder: "Filter unread chats...",
+      emptyTitle: "No Unread Messages",
+      emptyDescription: "All caught up! You have no unread chats.",
+      unreadCount: (count: number) => `${count} unread`,
+      totalCount: (count: number) => ` (${count} total)`,
+    },
+    sendMessage: {
+      title: "Send Message",
+      description: "Quickly send a message to any chat",
+      chatLabel: "Chat",
+      chatPlaceholder: "Select a chat",
+      messageLabel: "Message",
+      messagePlaceholder: "Type your message here...",
+      submitButton: "Send Message",
+      successMessage: "✓ Message sent successfully",
+      errorTitle: "Failed to Send Message",
+      missingInfoTitle: "Missing Information",
+      missingInfoMessage: "Please select a chat and enter a message",
+    },
+    focusApp: {
+      title: "Focus Beeper Desktop",
+      description: "Bring Beeper Desktop to the foreground",
+      successMessage: "Beeper Desktop focused",
+      errorMessage: "Failed to focus Beeper Desktop",
+    },
+  },
+  
+  // Common
+  common: {
+    unnamedChat: "Unnamed Chat",
+    openInBeeper: "Open Chat in Beeper",
+    copyChatId: "Copy Chat ID",
+    showDetails: "Show Details",
+    pinned: "Pinned",
+    muted: "Muted",
+    archived: "Archived",
+    yes: "Yes",
+    no: "No",
+    details: {
+      id: "ID",
+      accountId: "Account ID",
+      network: "Network",
+      type: "Type",
+      unreadCount: "Unread Count",
+      isPinned: "Pinned",
+      isMuted: "Muted",
+      isArchived: "Archived",
+      lastActivity: "Last Activity",
+      na: "N/A",
+    },
+  },
+};
+
+export type Translations = typeof en;
