@@ -3,34 +3,7 @@ import { withAccessToken } from "@raycast/utils";
 import { useState } from "react";
 import { useBeeperDesktop, createBeeperOAuth, focusApp } from "./api";
 import { t } from "./locales";
-
-/**
- * Selects an icon representing the given chat/network name.
- *
- * @param network - Network name or identifier (case-insensitive; may include spaces, slashes, or hyphens)
- * @returns The matching local SVG asset for the network, or `Icon.Message` when no specific icon is available
- */
-function getNetworkIcon(network: string): Image.ImageLike {
-  const networkLower = network.toLowerCase().replace(/[/\s-]/g, "");
-
-  const iconMap: Record<string, string> = {
-    slack: "slack.svg",
-    whatsapp: "whatsapp.svg",
-    telegram: "telegram.svg",
-    discord: "discord.svg",
-    instagram: "instagram.svg",
-    facebook: "facebook.svg",
-    facebookmessenger: "messenger.svg",
-    messenger: "messenger.svg",
-    signal: "signal.svg",
-    imessage: "imessage.svg",
-    twitter: "twitter.svg",
-    email: "email.svg",
-    googlemessages: "google-messages.svg",
-  };
-
-  return iconMap[networkLower] || Icon.Message;
-}
+import { getNetworkIcon } from "./network-icons";
 
 /**
  * Render a search interface that finds and displays Beeper chats matching the user's query.

@@ -58,7 +58,7 @@ function SendMessageForm() {
       await showToast({
         style: Toast.Style.Failure,
         title: translations.commands.sendMessage.errorTitle,
-        message: error instanceof Error ? error.message : "Unknown error occurred",
+        message: error instanceof Error ? error.message : translations.common.unknownError,
       });
     } finally {
       setIsLoading(false);
