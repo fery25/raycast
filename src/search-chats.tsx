@@ -1,9 +1,10 @@
 import { ActionPanel, Action, List, Icon} from "@raycast/api";
 import { withAccessToken } from "@raycast/utils";
 import { useState } from "react";
-import { useBeeperDesktop, createBeeperOAuth, focusApp } from "./api";
+import { createBeeperOAuth, focusApp } from "./api";
 import { t } from "./locales";
-import { getNetworkIcon } from "./network-icons";
+import { ChatListItem } from "./components/ChatListItem";
+import { useChatSearch } from "./hooks/useChatSearch";
 
 /**
  * Render a search interface that finds and displays Beeper chats matching the user's query.
@@ -17,19 +18,7 @@ import { getNetworkIcon } from "./network-icons";
 function SearchChatsCommand() {
   const translations = t();
   const [searchText, setSearchText] = useState("");
-  const { data: chats = [], isLoading } = useBeeperDesktop(
-    async (client) => {
-      if (!searchText) {
-        return [];
-      }
-      const allChats = [];
-      for await (const chat of client.chats.search({ query: searchText })) {
-        allChats.push(chat);
-      }
-      return allChats;
-    },
-    [searchText],
-  );
+  const { data: chats = [], isLoading } = useChatSearch(searchText);
 
   return (
     <List
@@ -56,28 +45,20 @@ function SearchChatsCommand() {
           )
         : (
             chats.map((chat) => (
-              <List.Item
-                key={chat.id}
-                icon={getNetworkIcon(chat.network)}
-                title={chat.title || translations.common.unnamedChat}
-                subtitle={chat.network}
+              <ChatListItem
+                chat={{
+                  ...chat,
+                  onOpen: () => focusApp({ chatID: chat.id }),
+                }}
+                translations={translations}
                 accessories={[
                   ...(chat.unreadCount > 0
-                    ? [{ text: translations.commands.unreadChats.unreadCount(chat.unreadCount) }]
+                    ? [{ text: translations.common.unreadCount(chat.unreadCount) }]
                     : []),
                   ...(chat.isPinned ? [{ icon: Icon.Pin }] : []),
                   ...(chat.isMuted ? [{ icon: Icon.SpeakerOff }] : []),
                 ]}
-                actions={
-                  <ActionPanel>
-                    <Action
-                      title={translations.common.openInBeeper}
-                      icon={Icon.Window}
-                      onAction={() => focusApp({ chatID: chat.id })}
-                    />
-                    <Action.CopyToClipboard title={translations.common.copyChatId} content={chat.id} />
-                  </ActionPanel>
-                }
+                showDetails={false}
               />
             ))
           )}

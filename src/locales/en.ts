@@ -58,6 +58,7 @@ export const en = {
   // Common
   common: {
     unnamedChat: "Unnamed Chat",
+    unreadCount: (count: number) => `${count} unread`,
     unknownError: "Unknown error occurred",
     openInBeeper: "Open Chat in Beeper",
     copyChatId: "Copy Chat ID",
