@@ -1,9 +1,50 @@
 import { useState } from "react";
-import { ActionPanel, Detail, List, Action, Icon} from "@raycast/api";
+import { ActionPanel, Detail, List, Action, Icon, Image } from "@raycast/api";
 import { withAccessToken } from "@raycast/utils";
 import { useBeeperDesktop, createBeeperOAuth, focusApp } from "./api";
 import { t } from "./locales";
-import { getNetworkIcon } from "./network-icons";
+import { safeAvatarPath } from "./utils/avatar";
+
+function getNetworkIcon(network: string): Image.ImageLike {
+  const networkLower = network.toLowerCase().replace(/[/\s-]/g, "");
+
+  const iconMap: Record<string, string> = {
+    slack: "slack.svg",
+    whatsapp: "whatsapp.svg",
+    telegram: "telegram.svg",
+    discord: "discord.svg",
+    instagram: "instagram.svg",
+    facebook: "facebook.svg",
+    facebookmessenger: "messenger.svg",
+    messenger: "messenger.svg",
+    signal: "signal.svg",
+    imessage: "imessage.svg",
+    twitter: "twitter.svg",
+    email: "email.svg",
+    googlemessages: "google-messages.svg",
+  };
+
+  return iconMap[networkLower] || Icon.Message;
+}
+
+/**
+ * Returns chat icon - contact avatar for DMs, network icon for groups.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getChatIcon(chat: any): Image.ImageLike {
+  // For 1:1 chats, try to get the other person's avatar
+  if (chat.type !== "group" && chat.participants?.items) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const otherParticipant = chat.participants.items.find((p: any) => !p.isSelf);
+    if (otherParticipant?.imgURL) {
+      const validatedPath = safeAvatarPath(otherParticipant.imgURL);
+      if (validatedPath) {
+        return { source: validatedPath, mask: Image.Mask.Circle };
+      }
+    }
+  }
+  return getNetworkIcon(chat.network);
+}
 
 /**
  * Render a searchable list of Beeper chats with actions to open the chat in Beeper, view details, and copy the chat ID.
@@ -37,13 +78,10 @@ function ListChatsCommand() {
       {chats.map((chat) => (
         <List.Item
           key={chat.id}
-          icon={getNetworkIcon(chat.network)}
+          icon={getChatIcon(chat)}
           title={chat.title || translations.common.unnamedChat}
           subtitle={chat.network}
-          accessories={[
-            { text: chat.type },
-            ...(chat.lastActivity ? [{ date: new Date(chat.lastActivity) }] : []),
-          ]}
+          accessories={[{ text: chat.type }, ...(chat.lastActivity ? [{ date: new Date(chat.lastActivity) }] : [])]}
           actions={
             <ActionPanel>
               <Action

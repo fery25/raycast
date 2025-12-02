@@ -1,10 +1,27 @@
-import { List, Icon} from "@raycast/api";
+import { List, Icon } from "@raycast/api";
 import { withAccessToken } from "@raycast/utils";
 import { useState } from "react";
 import { createBeeperOAuth, focusApp } from "./api";
 import { t } from "./locales";
 import { ChatListItem } from "./components/ChatListItem";
 import { useChatSearch } from "./hooks/useChatSearch";
+import { safeAvatarPath } from "./utils/avatar";
+
+/**
+ * Returns validated avatar path for 1:1 chats, undefined for groups or invalid paths.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getAvatarUrl(chat: any): string | undefined {
+  // Only show avatar for 1:1 chats, not groups
+  if (chat.type !== "group" && chat.participants?.items) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const otherParticipant = chat.participants.items.find((p: any) => !p.isSelf);
+    if (otherParticipant?.imgURL) {
+      return safeAvatarPath(otherParticipant.imgURL);
+    }
+  }
+  return undefined;
+}
 
 /**
  * Render a search interface that finds and displays Beeper chats matching the user's query.
@@ -27,42 +44,37 @@ function SearchChatsCommand() {
       onSearchTextChange={setSearchText}
       throttle
     >
-      {searchText === ""
-        ? (
-            <List.EmptyView
-              icon={Icon.MagnifyingGlass}
-              title={translations.commands.searchChats.emptyTitle}
-              description={translations.commands.searchChats.emptyDescription}
-            />
-          )
-        : !isLoading && chats.length === 0
-        ? (
-            <List.EmptyView
-              icon={Icon.Message}
-              title={translations.commands.searchChats.noResultsTitle}
-              description={translations.commands.searchChats.noResultsDescription}
-            />
-          )
-        : (
-            chats.map((chat) => (
-              <ChatListItem
-                key={chat.id}
-                chat={{
-                  ...chat,
-                  onOpen: () => focusApp({ chatID: chat.id }),
-                }}
-                translations={translations}
-                accessories={[
-                  ...(chat.unreadCount > 0
-                    ? [{ text: translations.common.unreadCount(chat.unreadCount) }]
-                    : []),
-                  ...(chat.isPinned ? [{ icon: Icon.Pin }] : []),
-                  ...(chat.isMuted ? [{ icon: Icon.SpeakerOff }] : []),
-                ]}
-                showDetails={false}
-              />
-            ))
-          )}
+      {searchText === "" ? (
+        <List.EmptyView
+          icon={Icon.MagnifyingGlass}
+          title={translations.commands.searchChats.emptyTitle}
+          description={translations.commands.searchChats.emptyDescription}
+        />
+      ) : !isLoading && chats.length === 0 ? (
+        <List.EmptyView
+          icon={Icon.Message}
+          title={translations.commands.searchChats.noResultsTitle}
+          description={translations.commands.searchChats.noResultsDescription}
+        />
+      ) : (
+        chats.map((chat) => (
+          <ChatListItem
+            key={chat.id}
+            chat={{
+              ...chat,
+              avatarUrl: getAvatarUrl(chat),
+              onOpen: () => focusApp({ chatID: chat.id }),
+            }}
+            translations={translations}
+            accessories={[
+              ...(chat.unreadCount > 0 ? [{ text: translations.common.unreadCount(chat.unreadCount) }] : []),
+              ...(chat.isPinned ? [{ icon: Icon.Pin }] : []),
+              ...(chat.isMuted ? [{ icon: Icon.SpeakerOff }] : []),
+            ]}
+            showDetails={false}
+          />
+        ))
+      )}
     </List>
   );
 }

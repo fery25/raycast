@@ -2,15 +2,8 @@ import { ActionPanel, Action, List, Icon, Image } from "@raycast/api";
 import { withAccessToken } from "@raycast/utils";
 import { useBeeperDesktop, createBeeperOAuth, focusApp } from "./api";
 import { t } from "./locales";
+import { safeAvatarPath } from "./utils/avatar";
 
-/**
- * Selects an icon representing a messaging network.
- *
- * The provided network name is normalized by lowercasing and removing spaces, slashes, and dashes before lookup.
- *
- * @param network - Network name (e.g., "Slack", "facebook-messenger", "Google Messages")
- * @returns The SVG filename for a known network (e.g., `"slack.svg"`, `"messenger.svg"`) or `Icon.Message` when no match exists
- */
 function getNetworkIcon(network: string): Image.ImageLike {
   const networkLower = network.toLowerCase().replace(/[/\s-]/g, "");
 
@@ -31,6 +24,25 @@ function getNetworkIcon(network: string): Image.ImageLike {
   };
 
   return iconMap[networkLower] || Icon.Message;
+}
+
+/**
+ * Returns chat icon - contact avatar for DMs, network icon for groups.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getChatIcon(chat: any): Image.ImageLike {
+  // For 1:1 chats, try to get the other person's avatar
+  if (chat.type !== "group" && chat.participants?.items) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const otherParticipant = chat.participants.items.find((p: any) => !p.isSelf);
+    if (otherParticipant?.imgURL) {
+      const validatedPath = safeAvatarPath(otherParticipant.imgURL);
+      if (validatedPath) {
+        return { source: validatedPath, mask: Image.Mask.Circle };
+      }
+    }
+  }
+  return getNetworkIcon(chat.network);
 }
 
 /**
@@ -67,7 +79,7 @@ function UnreadChatsCommand() {
       {chats.map((chat) => (
         <List.Item
           key={chat.id}
-          icon={getNetworkIcon(chat.network)}
+          icon={getChatIcon(chat)}
           title={chat.title || translations.common.unnamedChat}
           subtitle={chat.network}
           accessories={[
