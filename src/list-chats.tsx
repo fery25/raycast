@@ -4,28 +4,7 @@ import { withAccessToken } from "@raycast/utils";
 import { useBeeperDesktop, createBeeperOAuth, focusApp } from "./api";
 import { t } from "./locales";
 import { safeAvatarPath } from "./utils/avatar";
-
-function getNetworkIcon(network: string): Image.ImageLike {
-  const networkLower = network.toLowerCase().replace(/[/\s-]/g, "");
-
-  const iconMap: Record<string, string> = {
-    slack: "slack.svg",
-    whatsapp: "whatsapp.svg",
-    telegram: "telegram.svg",
-    discord: "discord.svg",
-    instagram: "instagram.svg",
-    facebook: "facebook.svg",
-    facebookmessenger: "messenger.svg",
-    messenger: "messenger.svg",
-    signal: "signal.svg",
-    imessage: "imessage.svg",
-    twitter: "twitter.svg",
-    email: "email.svg",
-    googlemessages: "google-messages.svg",
-  };
-
-  return iconMap[networkLower] || Icon.Message;
-}
+import { getNetworkIcon } from "./utils/networkIcons";
 
 /**
  * Returns chat icon - contact avatar for DMs, network icon for groups.

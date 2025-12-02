@@ -31,6 +31,8 @@ export const en = {
       searchPlaceholder: "Filter unread chats...",
       emptyTitle: "No Unread Messages",
       emptyDescription: "All caught up! You have no unread chats.",
+      errorTitle: "Failed to Load Chats",
+      errorDescription: "Could not connect to Beeper Desktop. Make sure it's running and try again.",
       unreadCount: (count: number) => `${count} unread`,
       totalCount: (count: number) => ` (${count} total)`,
     },

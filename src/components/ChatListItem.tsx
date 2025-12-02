@@ -1,28 +1,8 @@
 import { List, ActionPanel, Action, Icon, Image } from "@raycast/api";
+import type { ReactNode } from "react";
 import { Translations } from "../locales/en";
 import { safeAvatarPath } from "../utils/avatar";
-
-function getNetworkIcon(network: string): Image.ImageLike {
-  const networkLower = network.toLowerCase().replace(/[/\s-]/g, "");
-
-  const iconMap: Record<string, string> = {
-    slack: "slack.svg",
-    whatsapp: "whatsapp.svg",
-    telegram: "telegram.svg",
-    discord: "discord.svg",
-    instagram: "instagram.svg",
-    facebook: "facebook.svg",
-    facebookmessenger: "messenger.svg",
-    messenger: "messenger.svg",
-    signal: "signal.svg",
-    imessage: "imessage.svg",
-    twitter: "twitter.svg",
-    email: "email.svg",
-    googlemessages: "google-messages.svg",
-  };
-
-  return iconMap[networkLower] || Icon.Message;
-}
+import { getNetworkIcon } from "../utils/networkIcons";
 
 interface Chat {
   id: string;
@@ -30,14 +10,13 @@ interface Chat {
   title?: string;
   avatarUrl?: string;
   onOpen?: () => void;
-  detailsTarget?: React.ReactNode;
+  detailsTarget?: ReactNode;
 }
 
 interface ChatListItemProps {
   chat: Chat;
   translations: Translations;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  accessories?: Array<{ text?: string; icon?: any; date?: Date }>;
+  accessories?: List.Item.Props["accessories"];
   showDetails?: boolean;
 }
 

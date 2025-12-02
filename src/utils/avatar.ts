@@ -53,16 +53,21 @@ function isPathAllowed(normalizedPath: string): boolean {
  * Returns undefined if the URL is invalid or points outside the allowed directory.
  *
  * Security measures:
- * - Uses start-anchored regex to strip file:// prefix
+ * - Only accepts file:// URLs, rejects all other schemes
  * - Wraps decodeURIComponent in try/catch for malformed URIs
  * - Normalizes and resolves path to prevent path traversal
  * - Validates path is exactly the allowed directory or a true subpath (prevents prefix attacks)
- * - Rejects paths with null bytes or .. after normalization
+ * - Rejects paths with null bytes
  */
 export function safeAvatarPath(url: string): string | undefined {
   try {
-    // Only process file:// URLs, strip the prefix using start-anchored regex
-    let avatarPath = url.replace(/^file:\/\//, "");
+    // Only accept file:// URLs - explicitly reject other schemes
+    if (!url.startsWith("file://")) {
+      return undefined;
+    }
+
+    // Strip the file:// prefix
+    let avatarPath = url.slice(7); // "file://".length === 7
 
     // Decode URL encoding safely
     try {
@@ -72,16 +77,16 @@ export function safeAvatarPath(url: string): string | undefined {
       return undefined;
     }
 
+    // Reject paths with null bytes (could bypass string checks)
+    if (avatarPath.includes("\0")) {
+      return undefined;
+    }
+
     // Normalize and resolve the path to prevent path traversal
     const normalizedPath = normalize(resolve(avatarPath));
 
     // Validate that the path is within one of the allowed avatar directories
     if (!isPathAllowed(normalizedPath)) {
-      return undefined;
-    }
-
-    // Basic sanity check: path should not contain suspicious patterns after normalization
-    if (normalizedPath.includes("\0") || normalizedPath.includes("..")) {
       return undefined;
     }
 

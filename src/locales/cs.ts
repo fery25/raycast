@@ -33,6 +33,8 @@ export const cs: Translations = {
       searchPlaceholder: "Filtrovat nepřečtené chaty...",
       emptyTitle: "Žádné nepřečtené zprávy",
       emptyDescription: "Vše vyřízeno! Nemáte žádné nepřečtené chaty.",
+      errorTitle: "Nepodařilo se načíst chaty",
+      errorDescription: "Nelze se připojit k Beeper Desktop. Ujistěte se, že běží a zkuste to znovu.",
       unreadCount: (count: number) => `${count} nepřečtených`,
       totalCount: (count: number) => ` (${count} celkem)`,
     },

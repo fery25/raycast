@@ -71,15 +71,9 @@ export function getBeeperDesktop(): BeeperDesktop {
 
 /**
  * Execute an asynchronous operation using the current BeeperDesktop client and return its managed result.
- *
- * @param fn - Function that receives the current BeeperDesktop client and returns a promise for the desired value
- * @param deps - Optional React dependency list that controls when the operation is re-run
- * @returns The value produced by `fn` when executed with the current BeeperDesktop client; loading and error state are managed by the hook
  */
-export function useBeeperDesktop<T>(fn: (client: BeeperDesktop) => Promise<T>, deps?: React.DependencyList) {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore - usePromise type overload issue with optional deps
-  return usePromise(async () => fn(getBeeperDesktop()), deps);
+export function useBeeperDesktop<T>(fn: (client: BeeperDesktop) => Promise<T>) {
+  return usePromise(() => fn(getBeeperDesktop()));
 }
 
 export const focusApp = async (params: AppOpenParams = {}) => {

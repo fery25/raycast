@@ -5,10 +5,10 @@ import { createBeeperOAuth, focusApp } from "./api";
 import { t } from "./locales";
 import { ChatListItem } from "./components/ChatListItem";
 import { useChatSearch } from "./hooks/useChatSearch";
-import { safeAvatarPath } from "./utils/avatar";
 
 /**
- * Returns validated avatar path for 1:1 chats, undefined for groups or invalid paths.
+ * Returns raw avatar URL for 1:1 chats, undefined for groups.
+ * Note: The URL is not sanitized here - ChatListItem handles sanitization via safeAvatarPath.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getAvatarUrl(chat: any): string | undefined {
@@ -16,9 +16,7 @@ function getAvatarUrl(chat: any): string | undefined {
   if (chat.type !== "group" && chat.participants?.items) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const otherParticipant = chat.participants.items.find((p: any) => !p.isSelf);
-    if (otherParticipant?.imgURL) {
-      return safeAvatarPath(otherParticipant.imgURL);
-    }
+    return otherParticipant?.imgURL;
   }
   return undefined;
 }

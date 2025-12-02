@@ -3,28 +3,7 @@ import { withAccessToken } from "@raycast/utils";
 import { useBeeperDesktop, createBeeperOAuth, focusApp } from "./api";
 import { t } from "./locales";
 import { safeAvatarPath } from "./utils/avatar";
-
-function getNetworkIcon(network: string): Image.ImageLike {
-  const networkLower = network.toLowerCase().replace(/[/\s-]/g, "");
-
-  const iconMap: Record<string, string> = {
-    slack: "slack.svg",
-    whatsapp: "whatsapp.svg",
-    telegram: "telegram.svg",
-    discord: "discord.svg",
-    instagram: "instagram.svg",
-    facebook: "facebook.svg",
-    facebookmessenger: "messenger.svg",
-    messenger: "messenger.svg",
-    signal: "signal.svg",
-    imessage: "imessage.svg",
-    twitter: "twitter.svg",
-    email: "email.svg",
-    googlemessages: "google-messages.svg",
-  };
-
-  return iconMap[networkLower] || Icon.Message;
-}
+import { getNetworkIcon } from "./utils/networkIcons";
 
 /**
  * Returns chat icon - contact avatar for DMs, network icon for groups.
@@ -56,7 +35,11 @@ function getChatIcon(chat: any): Image.ImageLike {
  */
 function UnreadChatsCommand() {
   const translations = t();
-  const { data: chats = [], isLoading } = useBeeperDesktop(async (client) => {
+  const {
+    data: chats = [],
+    isLoading,
+    error,
+  } = useBeeperDesktop(async (client) => {
     const allChats = [];
     for await (const chat of client.chats.search({})) {
       // Filter only chats with unread messages
@@ -76,39 +59,46 @@ function UnreadChatsCommand() {
       searchBarPlaceholder={translations.commands.unreadChats.searchPlaceholder}
       navigationTitle={`${translations.commands.unreadChats.navigationTitle}${totalUnread > 0 ? translations.commands.unreadChats.totalCount(totalUnread) : ""}`}
     >
-      {chats.map((chat) => (
-        <List.Item
-          key={chat.id}
-          icon={getChatIcon(chat)}
-          title={chat.title || translations.common.unnamedChat}
-          subtitle={chat.network}
-          accessories={[
-            {
-              text: translations.commands.unreadChats.unreadCount(chat.unreadCount),
-              icon: Icon.Bubble,
-            },
-            ...(chat.isPinned ? [{ icon: Icon.Pin }] : []),
-            ...(chat.isMuted ? [{ icon: Icon.SpeakerOff }] : []),
-            ...(chat.lastActivity ? [{ date: new Date(chat.lastActivity) }] : []),
-          ]}
-          actions={
-            <ActionPanel>
-              <Action
-                title={translations.common.openInBeeper}
-                icon={Icon.Window}
-                onAction={() => focusApp({ chatID: chat.id })}
-              />
-              <Action.CopyToClipboard title={translations.common.copyChatId} content={chat.id} />
-            </ActionPanel>
-          }
+      {error ? (
+        <List.EmptyView
+          icon={Icon.ExclamationMark}
+          title={translations.commands.unreadChats.errorTitle}
+          description={translations.commands.unreadChats.errorDescription}
         />
-      ))}
-      {!isLoading && chats.length === 0 && (
+      ) : !isLoading && chats.length === 0 ? (
         <List.EmptyView
           icon={Icon.CheckCircle}
           title={translations.commands.unreadChats.emptyTitle}
           description={translations.commands.unreadChats.emptyDescription}
         />
+      ) : (
+        chats.map((chat) => (
+          <List.Item
+            key={chat.id}
+            icon={getChatIcon(chat)}
+            title={chat.title || translations.common.unnamedChat}
+            subtitle={chat.network}
+            accessories={[
+              {
+                text: translations.commands.unreadChats.unreadCount(chat.unreadCount),
+                icon: Icon.Bubble,
+              },
+              ...(chat.isPinned ? [{ icon: Icon.Pin }] : []),
+              ...(chat.isMuted ? [{ icon: Icon.SpeakerOff }] : []),
+              ...(chat.lastActivity ? [{ date: new Date(chat.lastActivity) }] : []),
+            ]}
+            actions={
+              <ActionPanel>
+                <Action
+                  title={translations.common.openInBeeper}
+                  icon={Icon.Window}
+                  onAction={() => focusApp({ chatID: chat.id })}
+                />
+                <Action.CopyToClipboard title={translations.common.copyChatId} content={chat.id} />
+              </ActionPanel>
+            }
+          />
+        ))
       )}
     </List>
   );
