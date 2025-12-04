@@ -55,15 +55,26 @@ export const en = {
       successMessage: "Beeper Desktop focused",
       errorMessage: "Failed to focus Beeper Desktop",
     },
+    searchMessages: {
+      title: "Search Messages",
+      description: "Search through your Beeper messages",
+      searchPlaceholder: "Search messages...",
+      emptyTitle: "Search for messages",
+      emptyDescription: "Start typing to search through your Beeper messages",
+      noResultsTitle: "No messages found",
+      noResultsDescription: "Try changing your search or ensure Beeper Desktop is running",
+    },
   },
 
   // Common
   common: {
     unnamedChat: "Unnamed Chat",
+    unknownMessage: "Unknown Message",
     unreadCount: (count: number) => `${count} unread`,
     unknownError: "Unknown error occurred",
     openInBeeper: "Open Chat in Beeper",
     copyChatId: "Copy Chat ID",
+    copyMessageText: "Copy Message Text",
     showDetails: "Show Details",
     pinned: "Pinned",
     muted: "Muted",

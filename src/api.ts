@@ -71,9 +71,16 @@ export function getBeeperDesktop(): BeeperDesktop {
 
 /**
  * Execute an asynchronous operation using the current BeeperDesktop client and return its managed result.
+ * The operation will be re-executed whenever any value in the args array changes.
+ *
+ * @param fn - Function that receives the BeeperDesktop client and args, returns a Promise
+ * @param args - Optional array of dependencies that trigger re-execution when changed
  */
-export function useBeeperDesktop<T>(fn: (client: BeeperDesktop) => Promise<T>) {
-  return usePromise(() => fn(getBeeperDesktop()));
+export function useBeeperDesktop<T, A extends unknown[] = []>(
+  fn: (client: BeeperDesktop, ...args: A) => Promise<T>,
+  args?: A,
+) {
+  return usePromise((...a: A) => fn(getBeeperDesktop(), ...a), (args ?? []) as A);
 }
 
 export const focusApp = async (params: AppOpenParams = {}) => {

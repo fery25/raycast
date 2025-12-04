@@ -42,6 +42,12 @@
       "title": "Send Message",
       "description": "Quickly send a message to any chat",
       "mode": "view"
+    },
+    {
+      "name": "search-messages",
+      "title": "Search Messages",
+      "description": "Search through your Beeper messages",
+      "mode": "view"
     }
   ],
   "preferences": [
@@ -61,8 +67,14 @@
       "required": false,
       "default": "en",
       "data": [
-        { "title": "English", "value": "en" },
-        { "title": "Čeština", "value": "cs" }
+        {
+          "title": "English",
+          "value": "en"
+        },
+        {
+          "title": "Čeština",
+          "value": "cs"
+        }
       ]
     }
   ],

@@ -57,15 +57,26 @@ export const cs: Translations = {
       successMessage: "Beeper Desktop zaměřen",
       errorMessage: "Nepodařilo se zaměřit Beeper Desktop",
     },
+    searchMessages: {
+      title: "Hledat zprávy",
+      description: "Prohledat vaše Beeper zprávy",
+      searchPlaceholder: "Hledat zprávy...",
+      emptyTitle: "Vyhledat zprávy",
+      emptyDescription: "Začněte psát pro vyhledávání v Beeper zprávách",
+      noResultsTitle: "Žádné zprávy nenalezeny",
+      noResultsDescription: "Zkuste změnit hledání nebo se ujistěte, že Beeper Desktop běží",
+    },
   },
 
   // Common
   common: {
     unnamedChat: "Nepojmenovaný chat",
+    unknownMessage: "Neznámá zpráva",
     unreadCount: (count: number) => `${count} nepřečtených`,
     unknownError: "Došlo k neznámé chybě",
     openInBeeper: "Otevřít chat v Beeper",
     copyChatId: "Kopírovat ID chatu",
+    copyMessageText: "Kopírovat text zprávy",
     showDetails: "Zobrazit detaily",
     pinned: "Připnuto",
     muted: "Ztišeno",

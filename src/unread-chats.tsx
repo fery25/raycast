@@ -49,7 +49,7 @@ function UnreadChatsCommand() {
     }
     // Sort by unread count (highest first)
     return allChats.sort((a, b) => b.unreadCount - a.unreadCount);
-  }, []);
+  });
 
   const totalUnread = chats.reduce((sum, chat) => sum + chat.unreadCount, 0);
 

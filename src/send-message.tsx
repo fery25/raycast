@@ -32,7 +32,7 @@ function SendMessageForm() {
       const bTime = b.lastActivity ? new Date(b.lastActivity).getTime() : 0;
       return bTime - aTime;
     });
-  }, []);
+  });
 
   async function handleSubmit(values: SendMessageFormValues) {
     if (!values.chatId || !values.message) {

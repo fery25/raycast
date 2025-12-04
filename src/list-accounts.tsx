@@ -1,6 +1,5 @@
 import { ActionPanel, Detail, List, Action, Icon, Keyboard, Color } from "@raycast/api";
 import { useCachedState, withAccessToken } from "@raycast/utils";
-import type { BeeperDesktop } from "@beeper/desktop-api";
 import { useBeeperDesktop, createBeeperOAuth, focusApp } from "./api";
 import { t } from "./locales";
 
@@ -19,7 +18,7 @@ function ListAccountsCommand() {
     isLoading,
     revalidate,
     error,
-  } = useBeeperDesktop<BeeperDesktop.Account[]>(async (client) => {
+  } = useBeeperDesktop(async (client) => {
     const result = await client.accounts.list();
     return result;
   });

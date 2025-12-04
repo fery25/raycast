@@ -36,9 +36,9 @@ function ListChatsCommand() {
   const translations = t();
   const [searchText, setSearchText] = useState("");
   const { data: chats = [], isLoading } = useBeeperDesktop(
-    async (client) => {
+    async (client, query) => {
       const allChats = [];
-      const searchParams = searchText ? { query: searchText } : {};
+      const searchParams = query ? { query } : {};
       for await (const chat of client.chats.search(searchParams)) {
         allChats.push(chat);
       }
