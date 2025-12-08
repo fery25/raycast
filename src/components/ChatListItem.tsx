@@ -6,6 +6,10 @@ import { getChatIcon } from "../utils/chatIcon";
 interface Chat {
   id: string;
   network: string;
+  type?: string;
+  participants?: {
+    items?: Array<{ isSelf: boolean; imgURL?: string }>;
+  };
   title?: string;
   avatarUrl?: string;
   onOpen?: () => void;

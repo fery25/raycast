@@ -47,7 +47,14 @@ function SearchMessagesCommand() {
                 <Action
                   title={translations.common.openInBeeper}
                   icon={Icon.Window}
-                  onAction={() => focusApp({ chatID: message.chatID, messageSortKey: String(message.sortKey) })}
+                  onAction={() => {
+                    const sortKey = message.sortKey != null ? String(message.sortKey) : undefined;
+                    focusApp(
+                      sortKey !== undefined
+                        ? { chatID: message.chatID, messageSortKey: sortKey }
+                        : { chatID: message.chatID }
+                    );
+                  }}
                 />
                 <Action.CopyToClipboard title={translations.common.copyMessageText} content={message.text || ""} />
               </ActionPanel>
